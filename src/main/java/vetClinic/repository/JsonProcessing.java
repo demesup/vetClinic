@@ -1,25 +1,37 @@
 package vetClinic.repository;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import vetClinic.enums.Model;
 import vetClinic.enums.ToJsonType;
+import vetClinic.model.Client;
+import vetClinic.model.animal.Animal;
 import vetClinic.model.personal.Worker;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class JsonSaverReader {
-    private final static ObjectMapper om = new ObjectMapper();
+public class JsonProcessing {
+
+    private static final ObjectMapper om = new ObjectMapper();
+
+    static {
+        om.registerModule(new JavaTimeModule());
+        om.registerSubtypes(Animal.class);
+        om.registerSubtypes(Client.class);
+    }
+
     private final JavaType type;
     private final List<? extends Model> list;
     private final File file;
     private final Class<? extends Model> listGeneric;
     private final String listName;
 
-    public JsonSaverReader(ToJsonType model, List<? extends Model> list) {
-        type = om.getTypeFactory().constructCollectionLikeType(List.class, Worker.class);
+    public JsonProcessing(ToJsonType model, List<? extends Model> list) {
+        type = om.getTypeFactory().constructCollectionLikeType(List.class, Client.class);
         this.list = list;
         file = model.getFile();
         listGeneric = model.getModelClass();

@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class Vaccination extends Visit{
-
-    @JsonProperty("vaccinationName")
     private String name;
 
     public Vaccination(LocalDateTime visitDateTime, Worker personal, String name) {

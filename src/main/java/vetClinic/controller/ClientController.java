@@ -17,11 +17,7 @@ public class ClientController {
         Client client = new Client(reader.readLine());
         clients.add(client);
 
-        System.out.println("Enter animal name");
-        String name = reader.readLine();
-        System.out.println("Enter animal age");
-        int age = readNumber();
-        animalController.newAnimal(name, age, client);
+        animalController.getAnimalParams(client);
     }
 
     private void chooseClient() throws IOException {

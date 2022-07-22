@@ -1,11 +1,10 @@
 package vetClinic.controller.visitController;
 
 import vetClinic.enums.Model;
-import vetClinic.exception.EmptyModelListException;
 import vetClinic.enums.VisitType;
+import vetClinic.exception.EmptyModelListException;
 import vetClinic.model.Client;
 import vetClinic.model.animal.Animal;
-import vetClinic.model.visit.Vaccination;
 import vetClinic.model.visit.Visit;
 
 import java.io.IOException;
@@ -17,21 +16,7 @@ import static vetClinic.controller.ClientController.clients;
 
 public class VisitController {
 
-    public void start() throws IOException {
-        System.out.println("Enter visit action \n[add, delete]");
-        switch (readStringUpperCaseWithoutSpace()) {
-            case "ADD" -> newVisit();
-            case "DELETE" -> delete();
-            default -> System.out.println("wrong input");
-        }
-    }
-
     public Visit newVisit() throws IOException {
-        clientController.start();
-        return null;
-    }
-
-    public void addVisitToAnimal(Animal animal) throws IOException {
         System.out.println("Enter visit type\n[examination, injury, vaccination]");
         VisitController visitController = null;
 
@@ -41,12 +26,10 @@ public class VisitController {
                 case EXAMINATION -> visitController = examinationController;
                 case VACCINATION -> visitController = vaccinationController;
             }
-            Visit visit = visitController.newVisit();
-            if (visit instanceof Vaccination) animal.getVaccinations().add(((Vaccination) visit).getName());
-            animal.getVisits().add(visit);
+            return visitController.newVisit();
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            addVisitToAnimal(animal);
+            return newVisit();
         }
     }
 
@@ -54,7 +37,9 @@ public class VisitController {
         try {
             Client client = (Client) findModel(clients);
             Animal animal = (Animal) findModel(client.getAnimals());
-            animal.getVisits().remove((Visit) findModel(animal.getVisits()));
+
+            List<Visit> visits = animal.getVisits();
+            visits.remove((Visit) findModel(visits));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

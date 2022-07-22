@@ -1,5 +1,6 @@
 package vetClinic.model.animal;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 
 import static vetClinic.Utils.listInSeparatedLines;

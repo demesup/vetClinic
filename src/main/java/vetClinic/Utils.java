@@ -1,5 +1,7 @@
 package vetClinic;
 
+import vetClinic.exception.EmptyModelListException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,10 +22,17 @@ public class Utils {
     }
 
     public static String listWithTitle(List<?> list) {
-        StringBuilder builder = new StringBuilder();
+        try {
+            if (list.isEmpty()) return "Empty list";
 
-        builder.append("******************** ").append(getTypeOfObject(list)).append(" ********************");
-        return String.valueOf(builder.append(listInSeparatedLines(list)));
+            StringBuilder builder = new StringBuilder();
+
+            builder.append("******************** ").append(getTypeOfObject(list)).append(" ********************");
+            return String.valueOf(builder.append(listInSeparatedLines(list)));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     private static String getTypeOfObject(List<?> list) {

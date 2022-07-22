@@ -2,11 +2,11 @@ package vetClinic.controller;
 
 import lombok.NoArgsConstructor;
 import vetClinic.enums.ToJsonType;
-import vetClinic.repository.JsonSaverReader;
+import vetClinic.repository.JsonProcessing;
 
 import java.io.IOException;
 
-import static vetClinic.Utils.reader;
+import static vetClinic.Utils.*;
 import static vetClinic.controller.AllControllers.*;
 import static vetClinic.controller.ClientController.clients;
 import static vetClinic.controller.workerController.WorkerController.workers;
@@ -15,22 +15,32 @@ import static vetClinic.controller.workerController.WorkerController.workers;
 public class MainController {
 
     public void start() throws IOException {
-        JsonSaverReader jsonSaverReader = new JsonSaverReader(ToJsonType.CLIENTS, clients);
-        JsonSaverReader workerSaverReader = new JsonSaverReader(ToJsonType.WORKERS, workers);
+        JsonProcessing jsonSaverReader = new JsonProcessing(ToJsonType.CLIENTS, clients);
+        JsonProcessing workerSaverReader = new JsonProcessing(ToJsonType.WORKERS, workers);
 
         System.out.println("Welcome to clinic");
         jsonSaverReader.getList();
-        workerSaverReader.getList();
+//        workerSaverReader.getList();
 
-        boolean continueProgram = true;
-        while (continueProgram) {
-            visitController.start();
-
-            System.out.println("If you want to exit enter exit");
-            if (reader.readLine().equalsIgnoreCase("exit")) continueProgram = false;
+        try {
+            boolean continueProgram = true;
+            while (continueProgram) {
+                System.out.println("Enter visit action \n[add, delete]");
+                switch (readStringUpperCaseWithoutSpace()) {
+                    case "ADD" -> clientController.start();
+                    case "DELETE" -> visitController.delete();
+                    case "PRINT" -> System.out.println(listWithTitle(clients));
+                    case "EXIT" -> {
+                        throw new IOException("Exiting..");
+                    }
+                    default -> System.out.println("wrong input");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         jsonSaverReader.saveList();
-        workerSaverReader.saveList();
+//        workerSaverReader.saveList();
 
         System.out.println("Good bye!");
     }

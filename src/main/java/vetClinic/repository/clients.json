@@ -1,0 +1,1 @@
+[{"vetClinic.model.Client":{"name":"1","animals":[{"name":"1","age":1,"visits":[{"visitDateTime":[2022,7,21,23,2,47,530436200],"personal":{"vetClinic.model.personal.Doctor":{"name":"2","experience":2}},"diagnosis":"21","procedures":["EYELID_TUMOR_REMOVAL_WITH_RECONSTRUCTION","THERAPY_LASER","TECA_BO"]}],"vaccinations":[],"livingOutside":false,"trained":false}]}}]

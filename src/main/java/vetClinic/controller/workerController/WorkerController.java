@@ -9,7 +9,6 @@ import vetClinic.model.personal.Worker;
 import vetClinic.model.personal.interfaces.CanHealInjury;
 import vetClinic.model.personal.interfaces.CanMakeExamination;
 import vetClinic.model.personal.interfaces.CanMakeVaccination;
-import vetClinic.model.personal.interfaces.WorkerInterface;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,19 +25,20 @@ public class WorkerController {
         System.out.println("New worker or one from existing? [new, exist]");
 
         switch (readStringUpperCaseWithoutSpace()) {
-            case "NEW" -> newWorker();
+            case "NEW" -> {
+                return newWorker();
+            }
             case "EXIST" -> {
-                return (Worker) chooseWorker();
+                return chooseWorker();
             }
             default -> {
                 System.out.println("Wrong input");
                 return start(visitType);
             }
         }
-        return start(visitType);
     }
 
-    private WorkerInterface chooseWorker() throws IOException {
+    private Worker chooseWorker() throws IOException {
 
         List<Worker> workerList = getSuitableWorkers(visitType);
         if (workerList.isEmpty()) {
@@ -71,7 +71,7 @@ public class WorkerController {
         return suitableWorkers;
     }
 
-    private void newWorker() throws IOException {
+    private Worker newWorker() throws IOException {
         System.out.println("Enter worker name");
         String name = reader.readLine();
         System.out.println("Enter worker experience");
@@ -80,13 +80,17 @@ public class WorkerController {
         System.out.println("Enter type[doctor, nurse, therapist]");
 
         try {
+            Worker worker = null;
             switch (WorkerType.valueOf(readStringUpperCaseWithoutSpace())) {
-                case NURSE -> workers.add(new Nurse(name, experience));
-                case DOCTOR -> workers.add(new Doctor(name, experience));
-                case THERAPIST -> workers.add(new Therapist(name, experience));
+                case NURSE -> worker = new Nurse(name, experience);
+                case DOCTOR -> worker = new Doctor(name, experience);
+                case THERAPIST -> worker = new Therapist(name, experience);
             }
+            workers.add(worker);
+            return start(visitType);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
+        return start(visitType);
     }
 }

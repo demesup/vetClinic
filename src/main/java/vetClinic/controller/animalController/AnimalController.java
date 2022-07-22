@@ -3,6 +3,8 @@ package vetClinic.controller.animalController;
 import vetClinic.enums.AnimalType;
 import vetClinic.model.Client;
 import vetClinic.model.animal.Animal;
+import vetClinic.model.visit.Vaccination;
+import vetClinic.model.visit.Visit;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,7 +22,7 @@ public class AnimalController implements NewAnimal {
         System.out.println("Enter number");
         try {
             Animal animal = animals.get(readNumber());
-            visitController.addVisitToAnimal(animal);
+            addVisitToAnimalList(animal);
         } catch (IndexOutOfBoundsException e) {
             System.out.println(e.getMessage());
         }
@@ -30,16 +32,18 @@ public class AnimalController implements NewAnimal {
         System.out.println("Add new or choose from existing? [new / exist]");
 
         switch (readStringUpperCaseWithoutSpace()) {
-            case "NEW" -> {
-                System.out.println("Enter animal name");
-                String name = reader.readLine();
-                System.out.println("Enter animal age");
-                int age = readNumber();
-                newAnimal(name, age, client);
-            }
+            case "NEW" -> getAnimalParams(client);
             case "EXIST" -> chooseAnimal(client);
             default -> System.out.println("Wrong input");
         }
+    }
+
+    public void getAnimalParams(Client client) throws IOException {
+        System.out.println("Enter animal name");
+        String name = reader.readLine();
+        System.out.println("Enter animal age");
+        int age = readNumber();
+        newAnimal(name, age, client);
     }
 
     @Override
@@ -52,12 +56,19 @@ public class AnimalController implements NewAnimal {
                 case DOG -> controller = dogController;
                 case HAMSTER -> controller = hamsterController;
             }
-            controller.newAnimal(name, age, client);
-            visitController.addVisitToAnimal(controller.newAnimal(name, age, client));
+            Animal animal = controller.newAnimal(name, age, client);
+            addVisitToAnimalList(animal);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             newAnimal(name, age, client);
         }
         return null;
+    }
+
+    private void addVisitToAnimalList(Animal animal) throws IOException {
+        Visit visit = visitController.newVisit();
+
+        animal.getVisits().add(visit);
+        if (visit instanceof Vaccination) animal.getVaccinations().add(((Vaccination) visit).getName());
     }
 }
