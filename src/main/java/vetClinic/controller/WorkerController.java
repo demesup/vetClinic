@@ -1,4 +1,4 @@
-package vetClinic.controller.workerController;
+package vetClinic.controller;
 
 import vetClinic.enums.VisitType;
 import vetClinic.enums.WorkerType;

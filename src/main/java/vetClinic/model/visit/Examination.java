@@ -1,22 +1,27 @@
 package vetClinic.model.visit;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 import vetClinic.model.personal.Worker;
 
 import java.time.LocalDateTime;
 
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.CLASS;
+
+@JsonTypeInfo(use = CLASS, include = PROPERTY, property = "type", visible = true)
 
 @Data
+@NoArgsConstructor
 public class Examination extends Visit {
 
+    String type = Examination.class.getName();
+    String visits = type;
     private boolean isPlanned;
 
-    public Examination(LocalDateTime visitDateTime, Worker personal, boolean isPlanned) {
-        super(visitDateTime, personal);
+    public Examination(LocalDateTime visitDateTime, Worker worker, boolean isPlanned) {
+        super(visitDateTime, worker);
         this.isPlanned = isPlanned;
     }
 
@@ -25,7 +30,7 @@ public class Examination extends Visit {
         return "Examination{" +
                 "\n\tisPlanned=" + isPlanned +
                 ", \n\tvisitDateTime=" + visitDateTime.toString() +
-                ", \n\tpersonal=" + personal +
+                ", \n\tworker=" + worker +
                 '}';
     }
 }

@@ -8,7 +8,6 @@ import vetClinic.controller.visitController.ExaminationController;
 import vetClinic.controller.visitController.InjuryController;
 import vetClinic.controller.visitController.VaccinationController;
 import vetClinic.controller.visitController.VisitController;
-import vetClinic.controller.workerController.WorkerController;
 
 public class AllControllers {
     public static VisitController visitController = new VisitController();

@@ -1,16 +1,28 @@
 package vetClinic.model.personal;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import vetClinic.enums.Model;
 import vetClinic.model.personal.interfaces.WorkerInterface;
 
-@NoArgsConstructor
-@Data
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT)
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.CLASS;
 
+@JsonTypeInfo(use = CLASS, include = PROPERTY)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Nurse.class, name = "type"),
+        @JsonSubTypes.Type(value = Doctor.class, name = "type"),
+        @JsonSubTypes.Type(value = Therapist.class, name = "type")
+})
+
+@Data
+@NoArgsConstructor
 public abstract class Worker implements Model, WorkerInterface {
+    @JsonIgnore
+    String worker = Worker.class.getName();
 
     protected String name;
     protected int experience;
@@ -18,14 +30,5 @@ public abstract class Worker implements Model, WorkerInterface {
     public Worker(String name, int experience) {
         this.name = name;
         this.experience = experience;
-    }
-
-    @Override
-    public String toString() {
-        return "Worker{" +
-                "\n\ttype= " + this.getClass().getSimpleName() +
-                ", \n\tname='" + name + '\'' +
-                ", \n\texperience=" + experience +
-                '}';
     }
 }

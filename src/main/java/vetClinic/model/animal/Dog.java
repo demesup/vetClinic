@@ -1,12 +1,20 @@
 package vetClinic.model.animal;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.CLASS;
 import static vetClinic.Utils.listInSeparatedLines;
 
+@JsonTypeInfo(use = CLASS, include = PROPERTY, property = "type", visible = true)
+
+@NoArgsConstructor
 @Data
-public class Dog extends Animal{
+public class Dog extends Animal {
+    String type = Dog.class.getName();
+    String animals = type;
     private boolean isLivingOutside;
     private boolean isTrained;
 

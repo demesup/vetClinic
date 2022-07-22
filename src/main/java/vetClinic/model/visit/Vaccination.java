@@ -1,20 +1,26 @@
 package vetClinic.model.visit;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 import vetClinic.model.personal.Worker;
 
 import java.time.LocalDateTime;
 
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.As.PROPERTY;
+import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.CLASS;
+
+@JsonTypeInfo(use = CLASS, include = PROPERTY, property = "type", visible = true)
+
 @Data
+@NoArgsConstructor
 public class Vaccination extends Visit{
+    String type = Vaccination.class.getName();
+    String visits = type;
     private String name;
 
-    public Vaccination(LocalDateTime visitDateTime, Worker personal, String name) {
-        super(visitDateTime, personal);
+    public Vaccination(LocalDateTime visitDateTime, Worker worker, String name) {
+        super(visitDateTime, worker);
         this.name = name;
     }
 
@@ -23,7 +29,7 @@ public class Vaccination extends Visit{
         return "Vaccination{" +
                 "\n\tname='" + name + '\'' +
                 ", \n\tvisitDateTime=" + visitDateTime.toString() +
-                ", \n\tpersonal=" + personal +
+                ", \n\tworker=" + worker +
                 '}';
     }
 }

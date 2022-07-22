@@ -1,7 +1,5 @@
 package vetClinic;
 
-import vetClinic.exception.EmptyModelListException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,7 +15,7 @@ public class Utils {
 
         StringBuilder builder = new StringBuilder();
 
-        IntStream.range(0, list.size()).mapToObj(i -> "\n" + i + ": " + list.get(i)).forEach(builder::append);
+        IntStream.range(0, list.size()).mapToObj(i -> "\n" + i + ": " + list.get(i) ).forEach(builder::append);
         return String.valueOf(builder);
     }
 

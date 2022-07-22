@@ -1,12 +1,8 @@
 package vetClinic.model.animal;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 import vetClinic.enums.Model;
 import vetClinic.model.visit.Visit;
@@ -19,17 +15,16 @@ import static com.fasterxml.jackson.annotation.JsonTypeInfo.Id.CLASS;
 import static vetClinic.Utils.listInSeparatedLines;
 
 @JsonTypeInfo(use = CLASS, include = PROPERTY, property = "animals", visible = true)
-
-
-@JsonPropertyOrder({
-        "name",
-        "age",
-        "visits",
-        "vaccinations"
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Cat.class, name = "type"),
+        @JsonSubTypes.Type(value = Dog.class, name = "type"),
+        @JsonSubTypes.Type(value = Hamster.class, name = "type")
 })
+
+
 @Data
 @NoArgsConstructor
-public abstract class Animal implements Model{
+public abstract class Animal implements Model {
 
     protected String name;
     protected int age;
