@@ -18,33 +18,34 @@ public class JsonConverter {
         om.registerModule(new JavaTimeModule());
     }
 
-    private final JavaType type;
-    private final File file;
-    private final String listName;
+//    private final JavaType type;
+//    private final File file;
+//    private final String listName;
+//
+//    public JsonConverter
+//            (ToJsonType model) {
+//        type = om.getTypeFactory().constructCollectionLikeType(List.class, model.getModelClass());
+//        file = model.getFile();
+//        listName = model.name();
+//    }
 
-    public JsonConverter
-            (ToJsonType model) {
-        type = om.getTypeFactory().constructCollectionLikeType(List.class, model.getModelClass());
-        file = model.getFile();
-        listName = model.name();
-    }
-
-    public void saveList(List<?> list) {
+    public void saveList(List<?> list, ToJsonType model) {
         if (list.isEmpty()) {
-            System.out.println("List is of " + listName + " is empty");
+            System.out.println("List is of " + model.name() + " is empty");
             return;
         }
 
         try {
-            om.writerFor(type).writeValue(file, list);
+            om.writerFor(om.getTypeFactory().constructCollectionLikeType(List.class, model.getModelClass()))
+                    .writeValue(model.getFile(), list);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public List<?> getList() {
+    public List<?> getList( ToJsonType model) {
         try {
-            return om.readValue(file,type);
+            return om.readValue(model.getFile(), om.getTypeFactory().constructCollectionLikeType(List.class, model.getModelClass()));
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return new ArrayList<>();

@@ -1,5 +1,8 @@
 package vetClinic;
 
+import vetClinic.enums.Model;
+import vetClinic.exception.EmptyModelListException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,5 +56,22 @@ public class Utils {
 
     public static String readStringUpperCaseWithoutSpace() throws IOException {
         return reader.readLine().toUpperCase(Locale.ROOT).replaceAll(" ", "");
+    }
+
+    public static boolean inputEqualsYes() throws IOException {
+        return reader.readLine().equalsIgnoreCase("yes");
+    }
+
+    public static Model findModel(List<? extends Model> list, int number) throws EmptyModelListException, IOException {
+        if (list.isEmpty()) throw new EmptyModelListException("Empty list");
+
+        System.out.println(listWithTitle(list));
+
+        try {
+            return list.get(number);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println(e.getMessage() + ". Try again");
+            return findModel(list, readNumber());
+        }
     }
 }

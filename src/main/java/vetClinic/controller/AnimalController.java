@@ -1,8 +1,11 @@
-package vetClinic.controller.animalController;
+package vetClinic.controller;
 
 import vetClinic.enums.AnimalType;
 import vetClinic.model.Client;
 import vetClinic.model.animal.Animal;
+import vetClinic.model.animal.Cat;
+import vetClinic.model.animal.Dog;
+import vetClinic.model.animal.Hamster;
 import vetClinic.model.visit.Vaccination;
 import vetClinic.model.visit.Visit;
 
@@ -11,9 +14,9 @@ import java.util.List;
 import java.util.Locale;
 
 import static vetClinic.Utils.*;
-import static vetClinic.controller.AllControllers.*;
+import static vetClinic.controller.MainController.visitController;
 
-public class AnimalController implements NewAnimal {
+public class AnimalController {
 
     public void chooseAnimal(Client client) throws IOException {
         List<Animal> animals = client.getAnimals();
@@ -32,37 +35,58 @@ public class AnimalController implements NewAnimal {
         System.out.println("Add new or choose from existing? [new / exist]");
 
         switch (readStringUpperCaseWithoutSpace()) {
-            case "NEW" -> getAnimalParams(client);
+            case "NEW" -> getGeneralParams(client);
             case "EXIST" -> chooseAnimal(client);
             default -> System.out.println("Wrong input");
         }
     }
 
-    public void getAnimalParams(Client client) throws IOException {
+    public void getGeneralParams(Client client) throws IOException {
         System.out.println("Enter animal name");
         String name = reader.readLine();
         System.out.println("Enter animal age");
         int age = readNumber();
-        newAnimal(name, age, client);
+        createAnimal(name, age, client);
     }
 
-    @Override
-    public Animal newAnimal(String name, int age, Client client) throws IOException {
+    public void createAnimal(String name, int age, Client client) throws IOException {
         System.out.println("Enter animal type\n[cat, dog, hamster]");
         try {
-            AnimalController controller = null;
+            Animal animal = null;
             switch (AnimalType.valueOf(reader.readLine().toUpperCase(Locale.ROOT))) {
-                case CAT -> controller = catController;
-                case DOG -> controller = dogController;
-                case HAMSTER -> controller = hamsterController;
+                case CAT -> animal = createCat(name, age);
+                case DOG -> animal = createDog(name, age);
+                case HAMSTER -> animal = createHamster(name, age);
             }
-            Animal animal = controller.newAnimal(name, age, client);
+
+            client.getAnimals().add(animal);
             addVisitToAnimalList(animal);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            newAnimal(name, age, client);
+            createAnimal(name, age, client);
         }
-        return null;
+    }
+
+    private Hamster createHamster(String name, int age) throws IOException {
+        System.out.println("Enter yes if your hamster is active");
+        boolean isActive = inputEqualsYes();
+        return new Hamster(name, age, isActive);
+    }
+
+    private Cat createCat(String name, int age) throws IOException {
+        System.out.println("If your cat is afraid of water enter yes");
+        boolean isAfraidOfWater = inputEqualsYes();
+
+        return new Cat(name, age, isAfraidOfWater);
+    }
+
+    private Dog createDog(String name, int age) throws IOException {
+        System.out.println("Enter yes if your dog is living outside");
+        boolean isLivingOutside = inputEqualsYes();
+        System.out.println("Enter yes if your dog is trained");
+        boolean isTrained = inputEqualsYes();
+
+        return new Dog(name, age, isLivingOutside, isTrained);
     }
 
     private void addVisitToAnimalList(Animal animal) throws IOException {
@@ -72,3 +96,4 @@ public class AnimalController implements NewAnimal {
         if (visit instanceof Vaccination) animal.getVaccinations().add(((Vaccination) visit).getName());
     }
 }
+

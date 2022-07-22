@@ -6,30 +6,28 @@ import vetClinic.model.Client;
 import vetClinic.model.personal.Worker;
 import vetClinic.repository.JsonConverter;
 
-import java.io.IOException;
 import java.util.List;
 
-import static vetClinic.Utils.*;
-import static vetClinic.controller.AllControllers.*;
+import static vetClinic.Utils.listWithTitle;
+import static vetClinic.Utils.readStringUpperCaseWithoutSpace;
 import static vetClinic.controller.ClientController.clients;
 import static vetClinic.controller.WorkerController.workers;
 
 @NoArgsConstructor
 public class MainController {
-
-
-    static JsonConverter clientsJson = new JsonConverter(ToJsonType.CLIENTS);
-    static JsonConverter workerJson = new JsonConverter(ToJsonType.WORKERS);
+    public static VisitController visitController = new VisitController();
+    public static AnimalController animalController = new AnimalController();
+    public static WorkerController workerController = new WorkerController();
+    public static ClientController clientController = new ClientController();
+    static JsonConverter jsonConverter = new JsonConverter();
 
     static {
         try {
-            clients = (List<Client>) clientsJson.getList();
-            workers = (List<Worker>) workerJson.getList();
-
+            clients = (List<Client>) jsonConverter.getList(ToJsonType.CLIENTS);
+            workers = (List<Worker>) jsonConverter.getList(ToJsonType.WORKERS);
 
             System.out.println(listWithTitle(clients));
             System.out.println(listWithTitle(workers));
-
         } catch (ClassCastException e) {
             System.out.println(e.getMessage());
         }
@@ -39,24 +37,23 @@ public class MainController {
         System.out.println("Welcome to clinic");
 
         try {
-            boolean continueProgram = true;
-            while (continueProgram) {
+
+            while (true) {
                 System.out.println("Enter visit action \n[add, delete, print, exit]");
                 switch (readStringUpperCaseWithoutSpace()) {
-                    case "ADD" -> clientController.start();
+                    case "ADD" -> visitController.add();
                     case "DELETE" -> visitController.delete();
                     case "PRINT" -> System.out.println(listWithTitle(clients));
-                    case "EXIT" -> throw new IOException("Exiting..");
+                    case "EXIT" -> throw new Exception("Exiting..");
                     default -> System.out.println("wrong input");
                 }
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        clientsJson.saveList(clients);
-        workerJson.saveList(workers);
+        jsonConverter.saveList(clients, ToJsonType.CLIENTS);
+        jsonConverter.saveList(workers, ToJsonType.WORKERS);
 
         System.out.println("Good bye!");
     }
-
 }

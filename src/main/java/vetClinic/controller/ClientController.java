@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static vetClinic.Utils.*;
-import static vetClinic.controller.AllControllers.animalController;
+import static vetClinic.controller.MainController.animalController;
 
 public class ClientController {
     public static List<Client> clients = new ArrayList<>();
@@ -17,7 +17,7 @@ public class ClientController {
         Client client = new Client(reader.readLine());
         clients.add(client);
 
-        animalController.getAnimalParams(client);
+        animalController.getGeneralParams(client);
     }
 
     private void chooseClient() throws IOException {
